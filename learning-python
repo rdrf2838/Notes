@@ -1,0 +1,93 @@
+programming model
+	objects
+		everything is an object
+		some are immutable (int, string)
+	argument passing
+		pass by value for immutable
+		pass by object reference (ptr and ref)
+			if modify variable, original variable's object modified
+			if reassign variable, original variable's object unchanged
+	duck typing
+expressions
+	math and logic
+		7/3, 7//3 (int div), 3**2
+		min, max, abs, round
+		>>, &, |
+		(3+4j).real, z.imag, abs(z)
+	lists and tuples: (4,), tuples immutable
+		slicing: [a:b:c] (last val: every c elements)
+		comprehension: [f(x) for x in l if t]
+		sorted(x) vs x.sort()
+	strings
+		'a', "a", x.upper(), x.replace(a,b)
+		f"hello {x}"
+	lambdas: lambda b:f(b)
+	generators
+		example
+			def fib():
+				while True:
+					yield x
+					x,y=y,x+y
+			fibs=fib()
+			next(fibs)
+		sending
+			z=yield x
+			fibs.send(5)
+	classes
+		class Shark(Animal):
+			type="fish" (class variable)
+			def __init__(self,name,age):
+				self.name=name
+			@staticmethod
+			def f(): pass
+			def g(self): pass
+		can change attributes after creation:
+			s1.my_label="new attribute"
+	packages
+		math	: floor, ceil, pow, sqrt, exp, log, pi, sin
+		cmath	: sqrt(-2)
+		random	: random.random()
+		re		: regex
+		numpy	: array([...]), ones(5), zeroes(.), a.fill(v)
+				: ones_like(a), arange(l,r), linspace(l,r,d) (inclusive)
+				: (X+1)*2, X*Y (element product), X@Y (dot product)
+				: a[0], a[0:2], a[:,0], a[:,0:2]
+				: X>3 (boolean vector), X[X>3] (boolean slicing)
+				: array([1,2,3])[[1,2]] (array slicing)
+				: i=where(X>3[,u,v]), X[i] (array, indices)
+				: column_stack([[1,2],[3,4]]), broadcasting, reshape
+				: any, all, unique, isin, count_nonzero, X.sort()
+				: sum, mean, prod, cumsum
+				: random	: default_rng(42), random(n) ([0,1])
+							: choice(xs,n) (pick n from xs)
+			
+module system
+	module: collection of fields and methods
+	package: module with __path__ attribute (name of directory containing __init__.py)
+		look in __path__ for modules belonging to this package. Technically can rename to force module resolver to look in different places
+		directories without __init__.py are namespace packages
+		submodules are not imported recursively
+			add to __init__.py
+			importing a.b.c causes __init__.py in a and b to be run
+	import: absolute, relative
+		order: current script's directory first
+		note: relative imports rely on __name__ attribute, e.g. a.b.c . So a top level script has __name__ == __main__, and cannot use relative imports.
+		dynamic imports using importlib
+	examples
+		globals()			: key-value pairs
+		dir(math)			: print properties and methods
+		from math import pi	: pi
+		imort math			: absolute import, math.pi
+		from . import test	: relative import
+		python -m test args	: run test as module. Uses current directory as root directory
+virtual environments
+	virtualenv
+		python3 -m venv env
+		. ./env/bin/activate
+	pyenv
+		prepends (pyenv root)/shims to PATH. Then when we search PATH for files like pip, we find the pyenv shim named pip and run it. The shim is an executable that passes the command to pyenv.
+		works with virtualenv (change python version)
+		commands
+			pyenv versions		: list all versions
+			pyenv global 2.7.18	: change python version. Also shell, local
+

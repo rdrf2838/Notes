@@ -1,0 +1,8 @@
+terminal
+	new tab
+		ctrl-shift-`
+	switch tab
+		ctrl-pgup/pgdn
+	close tab
+		shift-`
+

@@ -1,0 +1,42 @@
+syntax
+	datatypes: 0b11, 0xF
+	bit manipulation: <<, >>, ~, &, |, ^ (xor),log2(n)
+	strings
+		string s2=s			: copy constructor
+		s==s2				: string equality
+		s.substr(pos,len)	: copy substring
+		reverse(it,it)		: standard reverse
+		stoi, to_string		: string to/from int
+	lambda functions
+		[](params){//smth}
+	function objects
+		class fn_object{void operator()(params){}}
+library items
+	functions
+		lower_bound(start,end,u)
+			returns iterator to v >= u, or end
+		upperbound(it1,it2,u)
+			returns iterator to v > u, or end
+		distance(it1,it2)
+	containers
+		vector
+		stack
+		queue
+		priority_queue
+		deque
+		[unordered_]map
+		[unordered_]set
+		[unordered_]multiset
+			find(v)
+			erase(it)
+networking
+	highly manual, search online
+	Boost Asio: uses a queue of requests
+threading
+	#include<thread>
+	std::thread t(f,args);
+	t.join();
+
+locking
+
+

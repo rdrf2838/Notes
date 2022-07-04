@@ -1,0 +1,17 @@
+explorer
+	:Ex, :Vex, :Sex
+buffers
+	:ls, :bnext, :bprev, :bufferN
+windows: 
+	ctrl-w vshjkl
+tabs
+	:tabnew, :gt, :gT
+navigating up and down
+	ctrl-e
+	ctrl-y
+open and close folds
+	z-M			: minimise
+	z-R			: restore
+	
+	z-c, z-C	: close
+	z-o, z-O	: open

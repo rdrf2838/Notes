@@ -1,0 +1,41 @@
+initialisation
+	\documentclass{article}
+	\usepackage{amssymb}	% american math soc symbols
+	\usepackage{geometry}
+	\geometry{legalpaper, portrait, margin=1in}	% formatting
+	\usepackage{graphicx}	% for graphics
+	\graphicspath{/.}
+environments
+	align
+		\begin{align*} % *: no line numbers
+			&hello world \\
+			&goodbye \\
+			lmao & you
+		\end{align*}
+	tabular
+		\begin{tabular}{|c|c|c|c|c|c|c|c|}
+			\hline
+			1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+			\hline
+			1=R & CB & CB & CB & RCB & RCB & RCB & RCB \\
+			\hline
+			1=R & B & B & 4=C & RB & RCB & RCB & RCB \\
+			\hline
+			1=R & B & B & 4=C & RB & RC & RC & RCB \\
+			\hline
+			1=R & B & B & 4=C & 5=R & C & C & RCB \\
+			\hline
+			1=R & B & B & 4=C & 5=R & none & none & RCB \\
+			\hline
+		\end{tabular}
+	lstlisting
+		\begin{lstlisting}[language=java]
+		\end{lstlisting}
+	figures
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.7\linewidth]{abpmax.png}
+			\caption{If Max moves first}
+			\label{fig:abpmax}
+		\end{figure}	
+		Refer to figure \ref{fig:abpmax}.

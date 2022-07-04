@@ -1,0 +1,5 @@
+commands
+	f	: show link buttons, same tab
+	F	: open in new tab
+	H	: go back in history
+	L	: go forward in history

@@ -1,0 +1,9 @@
+need to be clear about operations that can or cannot be done
+strategy
+	practice some competitions
+	learn new datastructures
+	find problems from cp3/cf
+data structures
+	multiset
+		map<val,vector<pos>>	: vector is sorted, stores positions as well. Can check positions of arr[i], i.e. if there are any more arr[i] to the left/right of i, i.e. simulates removing elements from set while iterating. User with lower/upper_bound
+		multiset<int>

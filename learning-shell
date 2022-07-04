@@ -1,0 +1,52 @@
+streams, redirection, pipes
+	0		: input
+	1		: output
+	2		: error
+	>>		: append instead of overwrite
+	|		: redirect stream to another process' stream
+	2>&1	: redirect error to output
+	examples
+		my_program < input_data > output_data
+		make my_program > log 2>&1
+command-line expansion
+	shell expands text before processing
+	common patterns
+		*			: all file names in directory except .file.txt
+		?			: any single character except for .
+		~			: tilde expansion
+		A-{1,3}-D	: brace expansion. {1..3} enumerates
+		$PATH		: parameter expansion
+		$((1+2))	: arithmetic expansion
+		$(ls)		: command substitution
+		\			: cause following character to lose meaning
+		'			: all characters lose special meaning
+		"			: all but \, $
+shell and environment variables
+	variable_name=value
+	export variable_name
+	export variable_name=value
+commands
+	.			: source, run sh
+	jobs		: list jobs. [1] 1384: [job num] proc id
+	fg %1		: foreground
+	bg 1384		: background
+	kill %1		:
+	wait %1		: wait until process is done
+	suspend		:
+	find		: file name. $find . -atime -print
+				: $find . -name \*.old -exec rm -i {} \;
+	which		: find exe location
+	ln -s		: symlink (default hard), oldfile newfile
+	grep		: file contents. $grep <opt> <regex> <files>
+				: E = a or EE or (E) or E|E
+				: or E* or E? or E\{n,m\} (n to m)
+				: or [a-z] or [^a-z] (not a-z)
+				: or ^ or $ (start or end)
+	shell scripts
+	a #!/bin/sh	: run as script by OS
+	$?			: previous command exit code
+	a || b && c	: conditional execution
+	$2			: parameter passed to script
+	$*			: list of all arguments
+	$#			: number of arguments
+
