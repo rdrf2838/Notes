@@ -1,7 +1,7 @@
 explorer
 	:Ex, :Vex, :Sex
 buffers
-	:ls, :bnext, :bprev, :bufferN
+	:ls, :bnext, :bprev, :bNum, :bdNum
 windows: 
 	ctrl-w vshjkl
 tabs
