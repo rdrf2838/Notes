@@ -1,0 +1,197 @@
+scratch
+	notes
+		anything that is monotonically increasing/decreasing becomes a constant value!!
+		cpu is almost always either min or max
+	baseline
+		memory
+			usage only when running programs
+			no linear increase
+		disk
+			essentially no change. stuff gets written at a slow rate.
+		disk io
+			increasing, steeper when more pods are scheduled. almost certainly kubernetes thingies.
+	cpu
+theory
+	doing distributed pcr gets more information
+	in particular, if an application goes from io bound to cpu bound etc, then from a single node's perspective (with forgetting, i.e. memory limited), then it might learn temporarily that just cpu or just io is a good predictor, and will lag for a bit when the mode switches
+	in comparison, if we use information from all the nodes, we will learn that actually both cpu and io are required in predicting if a node is busy
+	this leads to more accurate predictions!
+setting up kubernetes cluster
+	forwarding ipv4 and letting iptables see bridged traffic
+	install crio
+		OS="xUbuntu_22.04"
+		VERSION="1.24"
+		cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+		deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /
+		EOF
+		cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list
+		deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /
+		EOF
+	pre-install
+		check mac and product_uuid unique
+		check network adapters
+		check required ports
+		enable iptables
+			cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+			overlay
+			br_netfilter
+			EOF
+
+			sudo modprobe overlay
+			sudo modprobe br_netfilter
+
+			# sysctl params required by setup, params persist across reboots
+			cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+			net.bridge.bridge-nf-call-iptables  = 1
+			net.bridge.bridge-nf-call-ip6tables = 1
+			net.ipv4.ip_forward                 = 1
+			EOF
+			# Apply sysctl params without reboot
+			sudo sysctl --system
+		turn off swap
+			sudo swapoff -a
+		check crio on
+			sudo systemctl daemon-reload
+			sudo systemctl enable crio --now
+	install kubelet kubeadm kubectl
+		sudo apt-get install -y kubelet=1.24.6-00 kubectl=1.24.6-00 kubeadm=1.24.6-00
+		sudo apt-mark hold kubelet kubeadm kubectl
+	install internal network
+		sudo kubeadm init --apiserver-advertise-address=192.168.0.106 --pod-network-cidr=192.167.0.0/16 --node-name $(hostname -s)
+		mkdir -p $HOME/.kube
+		sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+		sudo chown $(id -u):$(id -g) $HOME/.kube/config
+		# kubectl taint nodes --all node-role.kubernetes.io/master-
+		kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+		kubeadm token create --print-join-command
+
+		kubectl apply -f docker-python-deployment.yaml
+		kubectl apply -f fake-app-deployment.yaml
+
+		scp 192.168.0.106:.kube .kube
+	letting remote server access
+		normally, copying files would work
+		however, there is a firewall preventing connections on other ports. so cannot use local machine.
+	stopping everything
+		sudo kubeadm reset
+issues
+	logging problems
+		sometimes, if containers are not shut off by the kubectl controller, pods might have leftover slices in systemd cgroup. then, kubectl cadvisor thinks that containers are not running, so it tries to run, but fails as the container image is not present. this leads to many error messages
+		solution is to restart the node after problem is discovered
+		also, keep track of /var/log/syslog, make sure it's not 24gb large
+		sudo truncate -s 0 /var/log/syslog
+	startup nodes not working
+		possibly forgot to do some steps in setting up kube cluster
+	calico pod not running
+		not sure why, but restarting node worked
+	port still being used
+		find processes using ports and kill the process
+		sudo ss -lptn 'sport = :80'
+	first principal component sign flip
+		causes learning to fail (probably too large value)
+		perhaps modulo the first component (since it is always positive or negative? depends on signals)
+node details
+	ssh to
+		caelum-106.cl.cam.ac.uk
+		caelum-107.cl.cam.ac.uk
+		caelum-108.cl.cam.ac.uk
+	internal connections
+archive
+	project
+		choices
+			federated scheduling
+				may not have a signal analogous to CPU ready for containers
+					CPU ready is a per VM metric that measures percentage of time that VM is ready but not run
+					Run queue length is a host metric that measures fraction of processes that are running
+					
+			federated consensus
+				how was this implemented? can implementation framework be used with the federated scheduling system too?
+	resources
+		good dissertations
+			Maximilian Clark	PEM		Mastering Sevn Using Reinforcement Learning
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2021/mc2124-dissertation.pdf
+			James King	PEM		Improved Audio Super-Resolution
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2021/jak76-dissertation.pdf
+			Jake Hillion	Q		A Multi-Path Bidirectional Layer 3 Proxy
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2021/jsh77-dissertation.pdf
+			Renjie Zhou	M	Tiago Azevedo	Handling High-Dimensional Methylation Data for Parkinson’s Disease Prediction
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2020/rz296-dissertation.pdf
+			Marko Stankovic	TRIN	Duo Wang	Improving text-to-image synthesis with gradient-penalty Wasserstein GAN
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2018/ms2309-dissertation.pdf
+			Mukul Sanjay Rathi	Q	Alan Mycroft	Types for Data Race Freedom
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2020/msr45-dissertation.pdf
+			Matthew Thomas Jackson	CAI	Pietro Lio'	Accelerated video super-resolution
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2020/mj499-dissertation.pdf
+			Kwot Sin Lee	WOLFC	Christopher Town	Adversarial Image Generation Systems
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2020/ksl36-dissertation.pdf
+			Xiao Ma	CAI	Anthony Bordg	Verified DPLL-based SAT Solving in Isabelle/HOL
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2020/xm240-dissertation.pdf
+			Matilde Padovano	CHU	Pietro Lio'	Graph Representation of Reinforcement Learning Environments
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2020/mp861-dissertation.pdf
+			Chuan Tan	TH	Jin Zhu	Meta-Learning for Arbitrary Scale Super-Resolution
+				https://www.cl.cam.ac.uk/teaching/projects/archive/2020/ct538-dissertation.pdf
+		distributed systems notes
+			supervisor's papers
+				thesis: Kalman filtering for resource provisioning among virtualized nodes
+			supervisor's ideas
+	supervisor search
+		supervisors
+			Kalyvianaki
+				systems
+				https://docs.google.com/document/d/1f9EXGN0b3p1pkm_9PdFnViRhDvnzMslZ2QF7i0UTGus/edit#
+			Robert Watson
+				cheri
+				https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/cheri-projectideas.html
+			Timothy Jones
+				compiler to webassembly
+				https://www.cl.cam.ac.uk/research/comparch/project_suggestions/
+			Lucian Carata (same as below)
+			Ripduman Sohan
+				operating systems
+				https://www.cl.cam.ac.uk/research/dtg/new_sys_projs/
+		email Kalyvianaki
+			Dear Dr. Kalyvianaki,
+
+			I am Ivin, a 2nd year comsci. I'm currently looking for a Part II project supervisor, and some of your project suggestions seem pretty exciting! Hence, I would like to ask if you would be willing to supervise me.
+
+			I am currently interested in systems such as distributed systems, operating systems etc. I gained this interest during an internship in first year, where I interacted with Kubernetes/Docker while working as a backend developer. I found it impressive that such distributed systems could manage a company's entire server and database systems dynamically. I also enjoyed the concurrent and distributed systems course this year, and I tried writing my own Optimistic Concurrency Control system (along other conc/dist patterns). This summer, I will be interning as a Core Dev to work on systems again. One thing I hope to do is to learn about and work on more advanced problems in system design. Hence, I would love to have the chance to tackle the scheduling and consensus problems that you have suggested.
+
+			I understand that these topics require a good grasp of algorithms, maths and proof, and I think that I have the relevant skills. I did decently last year (10th/113), and in my free time, I have read some courses from the math tripos. You can take a look at my contributions to Dexter Chua's open source math notes.
+
+			Thank you very much for taking the time to read this email!
+
+			Best regards,
+
+			Ivin Lee
+		email Operating Systems
+			Dear Dr. Carata,
+
+			I am Ivin, a 2nd year comsci. I'm currently looking for a Part II project supervisor, and some of your project suggestions seem pretty exciting! Hence, I would like to ask if you would be willing to supervise me.
+
+			I am currently interested in systems such as operating systems, distributed systems etc. I gained this interest during an internship in first year, where I interacted with Kubernetes/Docker while working as a backend developer. I found it impressive that such systems could manage a company's entire server and database systems dynamically. I also tried writing my own Optimistic Concurrency Control system (along other conc/dist patterns) [...]. 
+
+			One area I hope to work on is operating systems and kernel code, as I enjoy writing low-level code and learning about how these complex systems work. I would love to have the chance to work on 'Allow running eBPF programs on top of low-overhead probes (kamprobes)' and 'Linux-to-FreeBSD Kernel Module Translator', or any other OS-related projects.
+
+			I understand that these projects require much familiarity with C. While not a particularly good substitute, I have done some competitive programming in C++ [...] and will be programming in C++ at a trading firm this summer as well. I understand that these don't constitute much experience, and I am open to suggestions on what else I can do to prepare over the summer.
+
+			I have attached a copy of my CV for your perusal[...]. Thank you very much for taking the time to read this email!
+
+			Best regards,
+
+			Ivin Lee
+		email compilers
+			Dear Dr. Watson,
+
+			I am Ivin, a 2nd year comsci. I'm currently looking for a Part II project supervisor, and some of your project suggestions seem pretty exciting! Hence, I would like to ask if you would be willing to supervise me.
+
+			I am currently interested in systems such as compilers, operating systems, distributed systems etc. I gained this interest during an internship in first year, where I interacted with Kubernetes/Docker while working as a backend developer. I found it impressive that such systems could manage a company's entire server and database systems dynamically. I also tried writing my own Optimistic Concurrency Control system (along other conc/dist patterns) [...]. 
+
+			I learnt about CHERI during the Computer Design course and I was particularly impressed by the emphasis on using formal methods to prove the correctness of the system, which is something that is often lacking in many systems. I also enjoyed my compilers course this year, and have gone on to read the 'Automata Theory' textbook that Dr Griffin suggested. Hence, I would love to have the chance to work on some of the projects you have suggested, namely 'CHERI code generation: From memory safety to type safety' and 'CHERI stack temporal safety', both of which involve CHERI and compilers.
+
+			I understand that these projects require much familiarity with C and compiler behaviour. While not a particularly good substitute, I have done some competitive programming in C++ [...] and will be programming in C++ at a trading firm this summer as well. Regarding compilers, I've read Dr Griffin's Slang compiler implementation on his Github, and I'm planning to implement a compiler to WebAssembly as a side project. I understand that these don't constitute much experience, and I am open to suggestions on what else I can do to prepare over the summer.
+
+			I have attached a copy of my CV for your perusal[...]. Thank you very much for taking the time to read this email!
+
+			Best regards,
+
+			Ivin Lee

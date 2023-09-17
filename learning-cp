@@ -1,9 +1,68 @@
-need to be clear about operations that can or cannot be done
+diary
+	meta hacker cup 2022
+		should have just focused on easiest question
+		spent too long exploring things which clearly wouldn't work
+		specific algorithm being using sum lists to model multisets of letters
 strategy
 	practice some competitions
 	learn new datastructures
 	find problems from cp3/cf
 data structures
+	minstack
+	minqueue(double mistack)
+	sparse table
+		precompute f(...) of ranges of length 2^i, (\lgN/+1) * N
+		decompose f(...) into range pieces
+	segment tree
+		each node defined by v, tl, tr
+		operations
+			build
+			update
+			query
+				at each level, only 4 calls to query => lg N
+		range updates
+			cache information in tree nodes
+			use a push(v) operation to update each node's value
+		2D segment tree
+			a segment tree of segment trees
+			build_x, build_y
+	disjoint set union
+		make_set, find_set, union_sets
+		par[n], size[n]
+		trees of elements, compare parent elements
+		two optimizations
+			path compression
+			size-based union
 	multiset
 		map<val,vector<pos>>	: vector is sorted, stores positions as well. Can check positions of arr[i], i.e. if there are any more arr[i] to the left/right of i, i.e. simulates removing elements from set while iterating. User with lower/upper_bound
 		multiset<int>
+algorithms
+	strings
+		rolling hash
+			sum p^i s[i], 'a'=1 to avoid collision
+			easy to calculate hash of s[i...j]
+			comparing 2 strings possible with h[i...j]*p^i
+			when not using ulli, remember (h[i+l]    +m      -h[i]) % m
+		rabin-karp
+	graph
+		bfs/dfs
+			correctness
+				vertices visited at most once
+				visited at least once
+			complexity
+			tips
+				set visited when adding to stack
+				saves space when using queue for bfs
+			edge types
+				tree edge (dfs calls form a tree)
+				back edge
+				forward edge
+				cross edge
+		articulation edge/point
+			undirected graphs
+			vis, tin, low
+			if back edge, use tin, if tree edge, use low
+				then low is the earliest vertex that you must pass through to reach current vertex
+			u--v articulation edge iff tin[u]<low[v]
+			u articulation vertex iff (not vertex 0) and tin[u]==low[u]
+			

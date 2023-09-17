@@ -1,0 +1,19 @@
+Subject: Phase 1 - Lee: Modify, implement and evaluate the Pronto federated scheduling algorithm
+
+Name: Ivin Lee
+College: St Catharine's College
+CRSID: il315
+Director of Studies: Dr Sergei Taraskin
+
+1. Please write 100 words on your current project ideas.
+	Scheduling tasks (e.g. processes, virtual machines, etc) is usually done in a centralised fashion. In comparison, Pronto uses principal component analysis to allow individual clients to accept or reject tasks, while maintaining a global view by merging the principal component spaces. As discussed with Dr Evangelia, a possible idea is augment and implement this algorithm for virtual machine or process scheduling. We can also easily evaluate said algorithm against existing scheduling algorithms.
+
+2. Please list names of potential project supervisors.
+	Dr Evangelia Kalyvianaki
+		contacted in June
+		in-person discussion at end June
+		agreed to be supervisor
+
+3. Is there any chance that your project will involve any computing resources other than the Computing Service's MCS and software that is already installed there, for example: your own machine, machines in College, special peripherals, imported software packages, special hardware, network access, substantial extra disc space on the MCS. If so indicate below what, and what it is needed for.
+
+	Development will likely be done on my machine. If we choose to do virtual machine scheduling, we may need access to machines that can run, say, VMWare.

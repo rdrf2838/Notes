@@ -1,0 +1,32 @@
+things to learn
+	code objects
+	import system
+		pure python modules
+		c modules
+		making own module
+	class and type systems
+	function calls and stack frames
+
+contribution strategy
+	find hot modules to work on
+
+contributing to cpython
+	original comments
+		Currently _PyUOpExecutorObject contains a fixed-length (_Py_UOP_MAX_TRACE_LENGTH, 32) array of micro instructions. We should switch to the usual variable-length array (making it a PyVarObject) so that we can make the largest superblock larger without paying the memory overhead cost for the full array.
+		This should be easy for someone with C experience. There are many examples in the CPython code base that do a similar thing. Basically the struct should be declared to end with _PyUOpInstruction trace[1]; and be given a size field, and various uses of the struct should be updated. I do expect a contributor taking this up to do their own research on how to build CPython, etc.
+	issue
+		learn how to code in c
+		check the execution of code that uses this function
+			starts from python
+			lifecycle
+				if an environmental variable is set, then the experimental uops code is run
+					set PYTHONUOPS, PYTHONUOPSDEBUG
+		call order
+			TARGET(JUMP_BACKWARD) {
+				frame = _PyOptimizer_BackEdge(frame, here, next_instr, stack_pointer);
+					uop_optimize(
+					_PyUopExecute(_PyExecutorObject *executor, _PyInterpreterFrame *frame, PyObject **stack_pointer)
+		find similar code that uses a variable length object instead
+
+./python -m unittest test.test_capi.test_misc.TestUops
+

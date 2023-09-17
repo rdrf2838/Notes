@@ -8,59 +8,129 @@ programming model
 			if modify variable, original variable's object modified
 			if reassign variable, original variable's object unchanged
 	duck typing
-expressions
-	math and logic
-		7/3, 7//3 (int div), 3**2
-		min, max, abs, round
-		>>, &, |
-		(3+4j).real, z.imag, abs(z)
-	lists and tuples: (4,), tuples immutable
-		slicing: [a:b:c] (last val: every c elements)
-		comprehension: [f(x) for x in l if t]
-		sorted(x) vs x.sort()
-	strings
-		'a', "a", x.upper(), x.replace(a,b)
-		f"hello {x}"
-	lambdas: lambda b:f(b)
-	generators
+	cpython
+		theoretical structure
+			lexer
+				Grammar/Tokens
+			parser
+				Grammar/python.gram
+				Tools/peg_generator
+				parser expression grammar
+			compiler
+				Python/compile.c
+				build symbol table
+				generate instruction sequence
+				generate control flow graph
+			assembler
+				assemble blocks into final code
+			interpreter
+				python program
+					sub-interpreters
+						global interpreter lock
+						memory allocation
+							reference counting
+						garbage collector
+						modules
+							module_methods
+							static struct PyModuleDef moduledef={...}
+						threads
+							Python/ceval.c
+							frame
+								_PyEval_EvalFrameDefault(...)
+									DISPATCH()
+								globals and locals
+								code object
+								stack
+				semantics
+					PyObjects
+						PyTypeObject
+							PyType_Type
+							has all the object class' functionality
+						use pointer casting to simulate typing
+		useful modules
+			ast, compile, dis
+		repository structure
+	commands
+		compiling python
+			./configure --with-pydebug
+			make -j2 -s
+		regenerating grammar
+				make regen-pegen
+packages
+	namespace packages
+		from mynamespace import subpackage_a
+		from mynamespace import subpackage_b
+		then you can break these sub-packages into two separate distributions
+		mynamespace-subpackage-a/
+			setup.py
+			mynamespace/
+				subpackage_a/
+					__init__.py
+		mynamespace-subpackage-b/
+			setup.py
+			mynamespace/
+				subpackage_b/
+					__init__.py
+				module_b.py
+objects
+	new and init
+		one returns object, other initialises object
+		should only implement __new__ if need to control object creation
 		example
-			def fib():
-				while True:
-					yield x
-					x,y=y,x+y
-			fibs=fib()
-			next(fibs)
-		sending
-			z=yield x
-			fibs.send(5)
-	classes
-		class Shark(Animal):
-			type="fish" (class variable)
-			def __init__(self,name,age):
-				self.name=name
+			p=P(1) equivalent to
+			p=object.__new__(P,1)
+			p.__init__(1)
+	generic
+		a.__dict__	# get the attribute key-value pairs
+	type classes
+		explanation
+			when class definition is run, class definition objects are in memory. Calling () on it calls the __new__ and __init__ methods normally. We can modify the instantiation of the class definition object by adding a metaclass. The metaclass can introduce new class fields.
+		example
+			class Foo: pass
+			type(Foo())	# <class '__main__.Foo'>
+			type(Foo)	# <class 'type'>
+
+			class Meta(type):	# adds a class attribute
+				def __new__(cls,name,bases,dct):
+					x=super().__new__(cls,name,bases,dct)
+					x.attr=10
+					return x
+			class Foo(metaclass=Meta): pass
+		syntax
+			type(<name>,<bases>,<dct>)
+				<name>	# __name__
+				<bases>	# __bases__, tuple of base classes from which the current class inherits
+				<dct>	# __dict__, namespace dictionary containing definitions
+	class vs static methods
+		static knows nothing about the class
+		class works with the class
+			useful for factory methods
+		example
+			@property
+			def x(self):...
+			@classmethod
+			def a(cls,...):...
 			@staticmethod
-			def f(): pass
-			def g(self): pass
-		can change attributes after creation:
-			s1.my_label="new attribute"
-	packages
-		math	: floor, ceil, pow, sqrt, exp, log, pi, sin
-		cmath	: sqrt(-2)
-		random	: random.random()
-		re		: regex
-		numpy	: array([...]), ones(5), zeroes(.), a.fill(v)
-				: ones_like(a), arange(l,r), linspace(l,r,d) (inclusive)
-				: (X+1)*2, X*Y (element product), X@Y (dot product)
-				: a[0], a[0:2], a[:,0], a[:,0:2]
-				: X>3 (boolean vector), X[X>3] (boolean slicing)
-				: array([1,2,3])[[1,2]] (array slicing)
-				: i=where(X>3[,u,v]), X[i] (array, indices)
-				: column_stack([[1,2],[3,4]]), broadcasting, reshape
-				: any, all, unique, isin, count_nonzero, X.sort()
-				: sum, mean, prod, cumsum
-				: random	: default_rng(42), random(n) ([0,1])
-							: choice(xs,n) (pick n from xs)
-			
+			def b(...):...
+types
+wheels
+	overview
+		distributions with source code might have c++ code too
+		either build already or build on user machine (which might require headers too)
+		wheel is a .zip archive with a special filename for which python and platform
+	source distribution
+		python setup.py sdist
+		builds on user machine
+	wheel
+		python setup.py bdist_wheel
+		already build
+	properties
+		wheels are typically smaller in size
+		avoid intermediate step of building packages
+	filename specifications
+		{dist}-{version}(-{build})?-{python}-{abi}-{platform}.whl
+		py2.py3-none-any.whl is a universal wheel
+		-none-any.whl likely a pure python package
 module system
 	module: collection of fields and methods
 	package: module with __path__ attribute (name of directory containing __init__.py)
@@ -90,4 +160,234 @@ virtual environments
 		commands
 			pyenv versions		: list all versions
 			pyenv global 2.7.18	: change python version. Also shell, local
+			pyenv install --list
+			pyenv install -v 1.2.3	# verbose
+expressions
+	math and logic
+		7/3, 7//3 (int div), 3**2
+		min, max, abs, round
+		>>, &, |
+		(3+4j).real, z.imag, abs(z)
+		==	# structural equality
+		is	# object id equality
+	lists and tuples: (4,), tuples immutable
+		slicing: [a:b:c] (last val: every c elements)
+		comprehension: [f(x) for x in l if t]
+		sorted(x) vs x.sort()
+	strings
+		'a', "a", x.upper(), x.replace(a,b)
+		f"hello {x}"
+	lambdas: lambda b:f(b)
+	generators
+		example
+			def fib():
+				while True:
+					yield x
+					x,y=y,x+y
+			fibs=fib()
+			next(fibs)
+		sending
+			z=yield x
+			fibs.send(5)
+	functional
+		filter(func,iter)
+	classes
+		class Shark(Animal):
+			type="fish" (class variable)
+			def __init__(self,name,age):
+				self.name=name
+			@staticmethod
+			def f(): pass
+			def g(self): pass
+		can change attributes after creation:
+			s1.my_label="new attribute"
+	packages
+useful packages
+	math	: floor, ceil, pow, sqrt, exp, log, pi, sin
+	cmath	: sqrt(-2)
+	random	: random.random()
+	numpy	: array([...]), ones(5), zeroes(.), a.fill(v)
+			: ones_like(a), arange(l,r), linspace(l,r,d) (inclusive)
+			: (X+1)*2, X*Y (element product), X@Y (dot product)
+			: a[0], a[0:2], a[:,0], a[:,0:2]
+			: X>3 (boolean vector), X[X>3] (boolean slicing)
+			: array([1,2,3])[[1,2]] (array slicing)
+			: i=where(X>3[,u,v]), X[i] (array, indices)
+			: column_stack([[1,2],[3,4]]), broadcasting, reshape
+			: any, all, unique, isin, count_nonzero, X.sort()
+			: sum, mean, prod, cumsum
+			: random	: default_rng(42), random(n) ([0,1])
+						: choice(xs,n) (pick n from xs)
+			: broadcasting
+				when operating on two arrays, numpy compares shapes element-wise
+				starts with trailing dimension
+				two dimensions are compatible if they are equal or one of them is 1
+				missing dimensions are treated as dimension 1
+	library
+		open(file,mode,encoding)
+			mode
+				'r','w','x','a','b','t','+'
+				'b'	# binary
+				't'	# text
+				'+'	# updating (reading and writing)
+		vars
+			without arguments, equivalent to locals()
+			with arguments, equivalent to object.__dict__
+		io
+			text io
+				file streams
+					f=open('myfile.txt','r',encoding='utf-8')
+				in memory streams
+					f=io.StringIO('some data')
+			binary io
+			raw io
+		os
+			os.path.basename(path)
+			os.file.exists(path)
+		re
+			backslash problem
+				\section	# to be matched
+				\\section	# escaped for re.compile()
+				'\\\\section'	# escaped for python string literal
+				using raw strings only needs 2 backslashes
+			pattern objects
+				p=re.compile('ab*')
+				m=match()	# always starts search at start of string
+					m.group()	# returns string
+						m.group(0)	# returns string of matched group, count brackets from left, starts from original string
+					m.groups()	# return tuple of strings for all subgroups
+					m.start()	# start pos
+					m.end()
+					m.span()	# (start,end)
+				m=p.search()	# searches whole string, can start from middle
+				p.findall()	# returns list of matching strings
+				p.finditer()	# returns iter of match objects
+			syntax
+				.	# any character except newline
+				^	# start of string
+				$	# end of string
+				*	# 0 or more repetitions of preceding
+				+	# 1 or more repetitions of preceding
+				?	# 0 or 1 repetitions of preceding
+				{m}	# exactly m copies of preceding
+				{m,n}	# from m to n copies of preceding
+				*?	# minimal matching for '*'
+				+?
+				??
+				{m,n}?
+				\	# escape special characters
+				[]	# character set, special characters lose their meaning inside sets
+				[^]	# complement character set
+				|	# a or b
+				(..)	# match regex inside brackets
+				(?..)	# extension notation, characters after ? determines meaning of construct
+				(?P<name>..)	# python groups
+				(?P=name..)	# backreference, matches whatever group has that name
+				(?=..)	# lookahead assertion, matches if .. matches next but doesn't consume string
+					Isaac (?=Asimov) matches Isaac if followed by Asimov
+				(?!..)	# negative lookahead assertion
+				(?<=..)	# positive lookbehind assertion
+				(?<!..)	# negative lookbehind assertion
+				\num	# matches contents of group of same number, numbering from 1
+				\A	# start of string
+				\Z	# end of string
+				\b	# empty string at beginning or end of word, boundary
+				\B	# not boundary
+				\d	# any unicode decimal digit
+				\D	# not decimal
+				\s	# unicode whitespace
+				\S	# not whitespace
+				\w	# unicode word, like [a-zA-Z0-9]
+				\W	# not unicode word
+			other methods
+				sub(pattern,repl,string)
+		glob
+			glob(pathname,*,root_dir=None,dir_fd=None,recursive=False)
+		click
+		pytest
+			structure
+				conftest.py
+				fixtures
+					direct
+					indirect
+						@pytest.mark.usefixtures('...'..)
+				tests
+			example
+				@pytest.fixture(scope='module')
+				def order():
+					return []
+				def test():
+					assert order=[]
+		datetime
+			naive
+				just some random date
+			aware
+				has timezone information
+			determining
+				date always naive
+				datetime/time object aware if
+					d.tzinfo is not None
+			types
+				date
+					comparisons allowed
+				time
+				datetime
+				timedelta
+					can do arithmetic and equals but not < or >
+			format/parse
+				d.strftime(format)
+				datetime.strptime(date_string,format)
+					%d	# day of the month zero padded
+					%m	# month zero padded
+					%y	# year without century zero padded
+					%Y	# year with century zero padded
+		argparse
+			examples
+				import argparse
+				parser=argparse.ArgumentParser(description=...)
+				parser.add_argument('a')	# positional, compulsory, args.a
+				parser.add_argument('--bee')	# optional, args.bee
+				args=parser.parse_args()
+			code
+				p.add_argument(
+					'abc',
+					dest='def',	# change attribute name that arg is stored under
+					action='store_const'
+						'store_const'	# allows '--abc' without args and defaults to const
+					const=42
+		flask
+			code
+				from flask import Flask
+				app = Flask(__name__)
+
+				@app.route('/')
+				def hello_world():
+				    return 'Hello, Docker!'
+			commands
+				python -m flask
+					--app [name]
+					--host=0.0.0.0  # listen to all ip addresses on machine
+					--debug
+					run
+pdb
+	p	# print
+	pp	# pretty print
+	n	# continue execution until next line in current function is reached
+	s	# execute current line and stop at first possible occasion
+	c	# continue execution until next breakpoint
+	l	# list lines
+	ll	# list all lines
+	b	# list all breaks
+	b x	# set breakpoint on line x
+	w	# print stack trace
+	u	# move current frame count (default 1) levels up in stack trace
+	d	# move frame x levels down
+python-related software
+	ipython
+		interactive python
+		terminal frontend
+		python executing environment (kernel) backend
+	jupyter notebook
+		jupyter server for notebooks
+		ipython kernel backend
 

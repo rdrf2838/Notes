@@ -1,0 +1,141 @@
+syntax
+	preprocessor directives
+		- #include
+			replaces the include line with the contents of filename
+			""  // same location as source file
+			<>  // predefined location
+		- #define newthing(var1...) oldthing(var1...)
+		- #if, #elif, #endif, #ifdef N, $ifndef N
+	types
+		char
+			>= 8 bits
+		int
+			>= 16 bits
+		int16_t
+		uint64_t
+		float
+			1.2f
+		double
+		octal, hexadecimal
+			52=064=0x34
+		array
+			long int i[10];
+			char s[10];
+				terminated by '\0'
+				char s[]="string mer" "ged"
+		enum
+			enum boolean {TRUE, FALSE}
+		union
+			union{int ival; float fval; char *sval;} u;
+		struct
+			struct circle {int x; int y; unsigned int r;} c1, c2;
+			struct circle d={.x=12, .y=23, .r=5};
+	typedef
+		typedef original paraphrase
+		creates a synonym for an existing type
+	modifiers
+		unsigned
+		short
+		long
+			1234l
+		const
+			can only be assigned a value when it is defined
+			const int *const p
+		volatile
+			variable may be changed by hardware or the kernel
+		extern
+		static
+			prevents declaration from being accessed elsewhere
+			for local variables, createx exactly one persistent instance regardless of re-entrance by threads
+		inline
+	variables
+		declare
+			tells compiler that there exists a variable with the given type and name
+			extern int a;
+		define
+			tells compiler where and how much storage to create for the variable
+			int a;
+		initialise
+			a=10;
+	pointers
+		char *pc
+		asterisk binds to the variable name
+		arrays are similar to pointers
+			char c[10];
+			char *pc = c;
+			char *pc = &c[0];  // same as above
+			but array names are not variables so cannot do e.g. c=... or ++c
+			when passed as function argument, char s[] becomes rewritten to char *sa
+		pointers to functions
+			void sort(..., int (*compare)(int,int)){...
+				if ((*compare)(a[j],a[j+1]){...}}
+			either of * can be omitted
+		generic pointer
+			void *p
+			can be a pointer to any object, but not legally to a function
+		pointers to structs
+			struct circle *pc;
+			pc->x;
+	control flow
+		e ? e : e
+		if e s else s
+		switch(e){
+			case e : s
+			...
+			default : s
+		}
+		while e s
+		for(e;e;e) s
+		do s while e
+	functions
+		declare
+			int power(void)
+				no arguments
+			int power(int base, int n);
+			extern, static
+		define
+			int power(int base, int n){s};
+		all arguments are copied
+	library
+		stdio.h
+			printf
+			scanf
+		stdlib.h
+			void *malloc(size_t size)
+			void *calloc(size_t nobj, size_t size)
+			void *realloc(void *p, size_t size)
+			void free(void *p)
+			e.g. p = (char *) malloc(sizeof(char)*1000)
+		string.h
+	memory
+		methods
+			graph traversal
+			arenas
+			reference counting and garbage collecting
+		checks
+			address sanitizer
+			memory sanitizer
+			undefined behaviour sanitizer
+			valgrind
+grammar
+	expression
+		literal, variable, function call etc
+		can be separated using a comma
+			type and value of comma-separated expression is the type and value of the result of the right-most expression
+	statement
+		expression followed by semicolon
+	block
+		{s1; s2; s3;}
+		equivalent to single statement
+		usually used in function definitions
+compilation
+	preprocess
+	compile (-E, probably edit)
+	assemble (-S)
+	link (-c, probably combine)
+execution
+debugging
+	gcc -g file1.c ...
+	gdb a.out
+	use vscode
+		I thnk vscode inputs breakpoints in source files into gdb after it starts

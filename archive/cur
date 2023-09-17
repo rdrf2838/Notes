@@ -1,0 +1,78 @@
+sponsorship presentations
+	overview of society
+		project teams
+			rescue
+		outreach events
+			minibots
+			unibots
+	examples of what projects are about
+		most passionate students
+		find updated descriptions of projects on email
+	examples of outreach events
+		emphasise greater coverage of students
+
+project updates
+	fightfest
+		lent 7-8
+			We've submitted our application to Fightfest, and should hear back on the 23rd of March as to whether we've been accepted or not.
+		lent 5-6
+			no progress to report on fightfest. Unfortunately people are very busy with term, and I had to return to Italy for a week with very little warning to receive citizenship, so have been drowning in coursework to catch up.
+		lent 3-4
+			We're ordering the last few things we need and putting together our application for Fightfest.
+		lent 1-2
+			Decent progress being made, wheels are mounted to motors and wiring is almost finished to have a moving testbed. Parts arrived over break and the design is pretty much finalized, we're now working on a full CAD. Next few weeks should see a mock in MDF take shape to see how everything fits together.
+	inmoov
+		lent 7-8
+			Repairs for the right hand underway. Good progress for the finger tensioning. Currently at Mackay’s trying to find connectors for the mobile base. The joint angle software team progressed to the next phase which is on ROS. The computer vision for grasping is doing lots of research into better ways to identify the banana.
+		lent 5-6
+			The puppet controller is coming along very well. After weeks of hard work in prototyping, the puppet arm has been fitted with potentiometers and has good range of motion. The next steps would be to complete the other arm, wire things up, and attach it to a body and head.
+			On the other hand (...get it?), we need more help on the tensioning. Fortunately, we received some good advice from our advisor Rich Walker during the fireside chat, which will help us with the tensioning issue which has been plaguing us since the start.
+		lent 3-4
+			Funding from Ocado came through. We are making good progress on the finger tension. Some unexpected replacement of 3D printed parts required for the right arm, but we are getting that sorted. Learnt the importance of having debonders when working with industrial strength glue, just in case things go wrong. The mobile base is also coming along, we are currently making a choice for the batteries and motors. Lots of exciting work going on with the cameras. Steady improvement is being made to the pose estimation code. We also have a new dedicated raspberry pi 4 for the humanoid which we will start testing the eyeball cameras with.
+		lent 1-2
+			Sponsorship funds from Ocado is on its way; we can't wait to use the funds for much needed components. Had a slight set back on upgrading the hands, but . The ROS introduction session has been rescheduled for Sunday evening. Those who are interested in joining the session should inform xj248. On the mobile platform side, a novel solution to finding a stable tall structure was found - we will be using a chair to build the height from ground to waist level.
+	research
+		lent 7-8
+			 The physical hand env team has finished writing the wrapper environment class with features such as collision detection system. At this stage, the arm is confined to move in a 2D vertical plane to lift the target object. We have yet to implement our new code so further testing will be carried out in the Dyson Centre over the Easter break. By the end of this, we hope to train the reinforcement learning model on the robotics arm directly.
+		lent 5-6
+			The physical hand env team has finished implementing the basic skeleton of the wrapper, and have begun work on the collision detection system, which stops the arm from knocking into the object. We have also decided on a 2D plane for the arm to move in to simplify the solution space. The composer/passive hand env team is continuing to debug the composer implementation.
+		lent 3-4
+			Our 3 teams have made some progress over the past 2 weeks. The physical hand env team has finished a portion of the wrapper and has begun testing on the actual robot, the composer/passive hand env team is currently debugging the composer implementation, and the models team is continuing to implement and test various algorithms.
+		lent 1-2
+			In the previous two weeks, the team leads have met up with each team to discuss the goals for this term. We currently have 3 tasks, namely the physical arm wrapper, the composer module, and the model training tasks. Hopefully by the end of this term we will be able to put everything together and get the physical arm to pick up our object.
+	rescue
+		lent 7-8
+			We are currently completing further testing and there is no major update in the past two weeks.
+		lent 5-6
+			We have submitted our 2022 entry for Robocup Rescue. Well done to the team for getting our robot and report ready under tight deadlines! We are looking to become more competition ready as we progress into the next term.
+		lent 3-4
+			We're getting ready for qualifying - currently constructing the arena and making final preparations on the robot. We are looking to implement some changes to the robot post qualifying, so you are interested in mechanical design do send me an email!
+		lent 1-2
+			Progress on all fronts has been good! Currently developing a design to mount a thermal imaging camera and other sensors to our arm. We are able to reliably identify using hazard signs using computer vision, and are making good progress with motion detection as well. We are getting to ready to qualify for Robocup 2022 international in late February, email dhg26 if you are interested in joining the project!
+	home edu
+		lent 7-8
+			No major update in the past two weeks.
+		lent 5-6
+			Recruiting and onboarding of new team members is going well. All software installation and set up should be done this week with initial testing of the robot hardware.
+		lent 3-4
+			CUES funding for purchasing robot hardware has been approved and granted. Will procure the components soon. Regular sessions are being restarted to ramp up training on ROS/Turtlebot/MATLAB and writing code to solve competition tasks.
+		lent 1-2
+			No updates for these 2 weeks
+society tasks
+	sponsorship
+		add intro slide for projects vs outreach
+		update project pictures
+			rescue picture
+		reorder slides into projects vs outreach
+		add cost estimations and breakdown
+			slides
+			spreadsheet
+	freshers' fair
+		banner
+		planning
+		note: CUSU will send an email around 30th July to announce the date when freshers' fair stall bookings will open (not the same date)
+	minibots
+		planning
+	meeting
+		7th Aug Sun 2pm
+		13th Aug Sat 2pm

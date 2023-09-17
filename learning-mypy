@@ -1,0 +1,8 @@
+mypy
+	gradual typing
+	very strict
+		e.g. cannot redefine variable
+pytype
+	type inference
+	accepts dynamicness of language
+smt solvers for types

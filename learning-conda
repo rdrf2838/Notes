@@ -1,0 +1,19 @@
+environment and package manager
+pip searches python package index (pypi), conda searches channels
+setup
+conda
+	create --name snakes python=3.9
+	activate snakes
+	env create -f environment.yml
+	pip install click	: can still use pip to install if not on conda
+	info --envs
+	config --prepend channels defaults	: add default channels to search
+environment.yml (similar to requirements.txt)
+	name: dev
+	channels:
+	- 
+	- defaults
+	- conda-forge
+	dependencies:
+	- django>=3
+	- pytest

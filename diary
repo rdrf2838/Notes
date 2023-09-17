@@ -1,8 +1,49 @@
-dissertation stuff
-	general topics in cloud computing
-	mathematics background
-internship
-	revising project structure
-	practice programming
-		revise competitive programming
-		learn new algorithms
+immediate tasks
+	study linear programming
+		need to be familiar with time complexity of said algorithms
+plan to maximise happiness
+	descriptions
+		state
+			my current state is always in 4D
+			3 dimensions plus time
+		event
+			an event is a slice of time where I should be doing something
+		plan
+			a plan is a tree of events
+				basically including branching if necessary
+			each plan is motivated by how to maximise happiness
+				e.g. in university, when working, etc
+				it is non-thorough
+					because human psychology is nontrivial
+				can keep brainstorming
+			each plan is orthogonal as long as there is enough time
+				filler plans like studying that can be scaled up or down
+	current state
+		---.-----university-----|-----working-----------------------------
+	plans
+		family
+			make sure to treasure interactions
+			especially when go back to Singapore
+		social
+			maintain interactions with friends
+			try to strengthen some interactions
+		academic
+			study topics properly
+				learn all the math topics properly
+				do dissertation properly
+			study topics that can make me smarter
+		co-curricular
+			manage society properly
+			reduce amount of time spent on this
+		extra-curricular
+			study topics that are useful in the future
+				money-related topics
+					economics
+					finance
+					investing
+				competitive programming
+					see if can use python
+				python
+					learn internals properly
+		travelling
+			can consider when feeling burnt out from work

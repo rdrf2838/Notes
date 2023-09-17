@@ -8,6 +8,17 @@ streams, redirection, pipes
 	examples
 		my_program < input_data > output_data
 		make my_program > log 2>&1
+global expressions
+	!(a|b|c)
+	(a|b|c)
+	?	: match 1 character
+	*	: match any number of characters
+	[abc]
+	[^abc]
+	[a-z]
+	\w
+	\s
+	\d
 command-line expansion
 	shell expands text before processing
 	common patterns
@@ -21,10 +32,33 @@ command-line expansion
 		\			: cause following character to lose meaning
 		'			: all characters lose special meaning
 		"			: all but \, $
+file test operators
+	syntax
+		if [ -f FILE && -f FILE2 ]; then
+			...
+		fi
+	flags
+		b	: block file
+		c	: character file
+		d	: directory
+		e	: any type of file
+		f	: regular file (not directory or device)
+		G	: same group as user
+		h	: symbolic link
+		g	: sgid flag set
+		k	: sticky bit flag
+		w	: writable
+		x	: executable
 shell and environment variables
 	variable_name=value
 	export variable_name
 	export variable_name=value
+	echo $variable_name
+arrays
+	ARRAY=(v1 v2 ... vn)
+	ARRAY[i]=v
+	echo ${ARRAY[i]}  # avoid doing $ARRAY which prints first element
+	echo ${ARRAY[*]}  # all elements, @ also ok
 commands
 	.			: source, run sh
 	jobs		: list jobs. [1] 1384: [job num] proc id
@@ -42,11 +76,43 @@ commands
 				: or E* or E? or E\{n,m\} (n to m)
 				: or [a-z] or [^a-z] (not a-z)
 				: or ^ or $ (start or end)
+	
 	shell scripts
 	a #!/bin/sh	: run as script by OS
 	$?			: previous command exit code
 	a || b && c	: conditional execution
 	$2			: parameter passed to script
-	$*			: list of all arguments
+	$@			: sequence of arguments
+		access using "$@"
+		convert to array like v=("$@")
 	$#			: number of arguments
-
+	taskset		: run programs with computing resource limits
+	. ./run.sh	: source the script (run in current shell)
+	find . -name 'x'	: find directory/file
+	find -L	: follow symlinks
+	column -t -s ','	: format file
+	head [-n x] file	: print first/last lines from file
+	grep 'abc' .	: search contents of file
+	date -d @1234	: useful date functions
+	truncate -s 0 tmp.txt	:
+examples
+	a.sh x y
+		echo "Username: $1";
+		echo "Age: $2";  # 
+	sh a.sh -f a -a b -u c
+		while getopts u:a:f: flag
+		do
+			case "${flag}" in
+				u) username=${OPTARG};;
+				a) age=${OPTARG};;
+				f) fullname=${OPTARG};;
+			esac
+		done
+		echo "username: $username";...
+	sh a.sh a b c d e
+		i=1;
+		for user in "$@"  # for loops loop over a sequence of variables
+		do
+			echo "Username - $i: $user";
+			i=$((i+1));
+		done

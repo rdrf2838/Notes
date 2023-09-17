@@ -1,0 +1,36 @@
+Matthew
+  17 hours ago
+is there a better way of checking the port for hooking sys_close, this is what I have now
+fbt::sys_close:entry /((struct inpcb *)((struct socket *)args[0]->td_proc->p_fd->fd_files->fdt_ofiles[args[1]->fd].fde_file->f_data)->so_pcb)->inp_inc.inc_ie.ie_lport == htons(10141)/
+{
+}
+(edited)
+white_check_mark
+eyes
+raised_hands
+
+
+
+
+4 replies
+
+
+Robert Watson
+  11 hours ago
+There are some clear API concepts that don’t map cleanly into specific points in implementation, and “close” is one of them, due to the way (lots of things) are shared and reference counted. I wonder if what you want is file-descriptor close (the above) or TCP close (a state transition).
+
+
+Robert Watson
+  11 hours ago
+Depending on your objective it might be better to instrument soo_close, so you know the argument is a socket, and it’s only “closed” on last close of the file descriptor? Or a relevant TCP function?
+
+
+Matthew
+  4 hours ago
+yeah i already have soo_closed hooked which probably replaces my need for sys_close
+is there an award for most horrifying dtrace script btw? xD (edited) 
+
+
+Robert Watson
+  1 hour ago
+Huh. An intriguing question. 

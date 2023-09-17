@@ -1,0 +1,127 @@
+concepts
+	structure
+		Index
+			MultiIndex
+		Series
+			index and data
+		Dataframe
+			dict of cols and series, shared index
+	creation
+	usage
+		manipulation
+			index-aligned operations
+			changing shape (reindex, drop)
+			joining
+			vectorized string methods
+		indexing
+	
+	dictionary of column name, column pairs
+	database table to select subtables
+	arrays, indexed by row
+	views and copies
+		using loc
+			dfmi.loc[:,('one','two')]=value
+			# becomes
+			dfmi.loc.__setitem__((slice(None),('one','two')),value)
+		using indexing
+			dfmi['one']['two']=value
+			# becomes
+			dfmi.__getitem__('one').__setitem__('two')
+		conclusion
+			single layer indexing is fine with ['a'] as __setitem__ called on original object, but double layer indexing could return a copy and __setitem__ called on copy object
+	loc vs iloc
+		loc selects by labels, iloc by index
+		however, rows are also indexed, loc[1:2] works
+	merging
+		without index/with 1 index O(N^2)
+		with index on 2 columns is O(N)
+	objects
+		dataframe
+			index
+				level	: name of each dimension in index
+			series
+	errors
+		cannot set a frame with no defined index and a scalar
+			example
+				df=pd.DataFrame('x':[])
+				df.loc[:,'y']=1  # fails
+				df.loc[:,'y']=df.loc[:,'x']  # works fine
+			set a frame with no defined index
+				adding a new column to an empty dataframe
+dtypes
+	df.astype(int64)
+	pandas,python,numpy
+	string
+		str
+			string_
+	int64
+		int
+			int_,int8,...uint8,...
+	float64
+		float
+			float_,float16,...
+	bool
+		bool
+			bool_
+	datetime64
+		NA
+			datetime64[ns]
+	setting up
+		pd.read_csv
+		df.to_csv(filename,index=False)
+		pd.DataFrame({'x':[...],...})
+		pd.DataFrame([(a,b,...)...],columns=[...],index=[...])
+	na handling
+		np.nan always returns false with comparisons
+		pd.isna(df)
+		df.fillna(repl)	# fill na with replacement
+		df.fillna(method='ffill')
+			ffill	# carry forwards
+			bfill	# carry backwards
+	indexing
+		df.columns	# column names, same as df.keys()
+		df.col	# single column, same as df['col']
+		df.col.iat[i]	# get value at col,row
+		df.loc[boolvec]	# single column
+		df[['c1','c2']]	# column indexing
+		df.loc[boolvec,['c1','c2']]	# both at once
+		df.iloc[i]	# single row, loses index
+		df.iloc[[i]]	# dataframe with single row
+		df.iloc[slice]	# range of rows
+		df.loc[:,'a']=df['a']+1	# pandas aligns on index
+		df.head(1)
+		df.tail(1)
+	column operations
+		pd.Series(vec,index=vec)
+		x.values
+		x.index.values
+		x1-x2	# always matches indexes
+		x.describe()	# mean, sd, etc
+		x.value_counts()	# unique value counts
+		x.sort_values()
+		x.mean()
+	single df operations
+		df.all(axis=0)	# check if all values along axis are true. axis=None checks both index and columns
+		df.rename(columns={'a':'b',...})
+		df.add_prefix('a_')
+		df.add_suffix('_b')
+		df.assign(...)	# add new columns
+		df.insert(...)
+		df.sample(n)
+		df.sort_values('col')
+		df.drop_duplicates('col')
+		df.apply(func,axis=1)
+		df.transform(func)	# call func on self producing dataframe with same axis shape as self
+		df.set_index(keys['a','b'])	# no bucketing
+		df.reset_index(level='n',drop=True)	# convert table to dataframe, drop previous index
+		df.unstack(fill_value=v)	# pivot index to column headings
+		df.stack()	# pivot column to index
+		df.rename_axis(columns=None)	# remove column group name
+		df.groupby(['a','b'])	# add column as index with bucketing
+		df.copy()
+	multiple df operations
+		pd.concat([df1,df2],axis=1)	# same as df1.append(df2), indexes will be aligned
+		df1.merge(df2,how='inner',on=...,left_on=...,right_on=...,suffixes=('_x','_y'))
+		df1.update(df2)
+		l,r=df1.align(df2,join='outer',axis=None)
+

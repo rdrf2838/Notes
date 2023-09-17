@@ -1,0 +1,30 @@
+jsonpath
+	basically each node is a dict or list of dicts, edges are keys
+	kubectl get pods -d json
+	functions
+		text
+		@
+		.	: child operator
+		..	: recursive descent
+		*	: wildcard, get all objects
+		[start:end:step]	: subscript operator
+		[,]	: union operator
+		?()	: filter
+			{.users[?(@.name=="e2e")].user.password}
+commands
+	minikube start
+	kubectl create deployment hello-node --image=...
+	kubectl expose deployment hello-node --type=LoadBalancer --port=8080
+	kubectl exec --stdin --tty [pod name] -- /bin/bash
+use local docker images
+	eval $(minikube -p minikube docker-env)
+minikube
+	description
+		runs in docker container
+		runs its own docker instance to handle pods
+		pods become containers in containers
+		to communicate with the internal containers, you can shell into the minikube docker container and use curl
+	commands
+		minikube start
+		minikube dashboard
+		minikube tunnel

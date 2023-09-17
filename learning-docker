@@ -1,0 +1,30 @@
+folder structure
+	python-docker
+	|____ app.py
+	|____ requirements.txt
+	|____ Dockerfile
+dockerfile syntax  # ordering matters to reduce the number of times image is recreated
+	FROM python:3.8-slim-buster
+	RUN apt-get update && apt-get install -y curl
+	WORKDIR /app
+	COPY requirements.txt requirements.txt
+	RUN pip3 install -r requirements.txt
+	COPY . .
+	CMD ["python3","-m","flask","run","--host=0.0.0.0"]
+commands
+	podman build --tag python-docker .  # build in this directory
+	podman images
+	podman tag python-docker:latest python-docker:v1.0.0
+	podman push rdrf/[repository]:[tagname]
+	podman rmi python-docker:v1.0.0
+
+	podman run 
+		--detach 
+		--publish 8000:5000 
+		--name rest-server
+		python-docker
+	podman exec -it [container-name] /bin/bash
+	podman ps
+	podman stop [name]
+	podman restart [name]
+	podman rm [name]
