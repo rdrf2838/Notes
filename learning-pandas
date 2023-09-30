@@ -14,6 +14,10 @@ concepts
 			joining
 			vectorized string methods
 		indexing
+			basic indexing
+				.loc for index
+			advanced indexing, multiindex
+				tuple: one level multi-key (horizontal), list: several keys (vertical)
 	
 	dictionary of column name, column pairs
 	database table to select subtables
